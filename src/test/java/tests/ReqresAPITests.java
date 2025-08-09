@@ -1,0 +1,227 @@
+package tests;
+
+import io.qameta.allure.*;
+import models.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import static io.qameta.allure.Allure.step;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.*;
+import static specs.RestApiSpec.baseRequestSpecification;
+import static specs.RestApiSpec.baseResponseSpecification;
+
+public class ReqresAPITests extends TestBase {
+
+    @Feature("Взаимодействие с пользователями") // Группировка тестов по функциональности
+    @Story("Получение данных пользователя") // Детализация внутри Feature
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.BLOCKER)
+    @Test
+    @Tag("rest_api")                                 // Тег для группового запуска
+    @DisplayName("Получение данных зарегистрированного пользователя")
+    void getSingleRegisteredUserDataTest() {
+
+        GetSingleUserResponseModel response = step("Отправка GET запроса для пользователя", () ->
+                given(baseRequestSpecification)
+                .when()
+                        .get(userPath + existingUserId)    // GET /api/users/2
+                .then()
+                        .spec(baseResponseSpecification(200))
+                        .extract().as(GetSingleUserResponseModel.class));
+
+        step("Проверка корректности данных пользователя", () -> {
+            assertNotNull(response.getData(),
+                    "Данные пользователя не должны быть null");
+            assertEquals(existingUserId, response.getData().getId(),
+                    "ID пользователя должен соответствовать запрошенному");
+            assertEquals("janet.weaver@reqres.in", response.getData().getEmail(),
+                    "Email должен соответствовать ожидаемому");
+            assertNotNull(response.getData().getFirst_name(),
+                    "Имя пользователя должно быть заполнено");
+        });
+    }
+
+    @Feature("Взаимодействие с пользователями")
+    @Story("Создание нового пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.CRITICAL)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Создание нового пользователя через POST запрос")
+    void postCreateNewUserTest() {
+
+        // Подготовка тестовых данных
+        CreateUserModel newUserData = new CreateUserModel("John Doe", "QA Engineer", "2024");
+
+        CreateUserResponseModel response = step("Отправка POST запроса для создания пользователя", () ->
+                given(baseRequestSpecification)
+                        .body(newUserData)
+                .when()
+                        .post(userPath)                    // POST /api/users
+                .then()
+                        .spec(baseResponseSpecification(201))
+                        .extract().as(CreateUserResponseModel.class));
+
+        step("Проверка успешного создания пользователя", () -> {
+            assertEquals("John Doe", response.getName(),
+                    "Имя должно совпадать с отправленным");
+            assertEquals("QA Engineer", response.getJob(),
+                    "Должность должна совпадать");
+            assertEquals("2024", response.getYear(),
+                    "Год должен совпадать");
+            assertNotNull(response.getId(),
+                    "ID созданного пользователя не должен быть null");
+            assertNotNull(response.getCreatedAt(),
+                    "Дата создания должна быть заполнена");
+        });
+    }
+
+    @Feature("Взаимодействие с пользователями")
+    @Story("Удаление пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.BLOCKER)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Удаление пользователя через DELETE запрос")
+    void deleteUserTest() {
+
+        String response = step("Отправка DELETE запроса", () ->
+                given(baseRequestSpecification)
+                .when()
+                        .delete(userPath + newUserId)      // DELETE /api/users/713
+                .then()
+                        .spec(baseResponseSpecification(204))  // 204 No Content
+                        .extract().asString());
+
+        step("Проверка успешного удаления", () -> {
+            assertTrue(response.isEmpty(),
+                    "Тело ответа должно быть пустым при статусе 204");
+        });
+    }
+
+    @Feature("Аутентификация")
+    @Story("Регистрация пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.BLOCKER)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Успешная регистрация пользователя")
+    void postRegisterSuccessfulTest() {
+
+        PostRegisterSuccessfulModel registerData =
+                new PostRegisterSuccessfulModel(userEmail, userPass);
+
+        PostRegisterSuccessfulResponseModel response = step("Отправка POST запроса регистрации", () ->
+                given(baseRequestSpecification)
+                        .body(registerData)
+                .when()
+                        .post(userRegister)                // POST /api/register
+                .then()
+                        .spec(baseResponseSpecification(200))
+                        .extract().as(PostRegisterSuccessfulResponseModel.class));
+
+        step("Проверка успешной регистрации", () -> {
+            assertNotNull(response.getId(),
+                    "ID пользователя должен быть возвращён");
+            assertNotNull(response.getToken(),
+                    "Токен должен быть возвращён");
+            assertEquals("4", response.getId(),
+                    "ID должен соответствовать ожидаемому");
+            assertEquals("QpwL5tke4Pnpja7X4", response.getToken(),
+                    "Токен должен соответствовать документации API");
+        });
+    }
+
+    @Feature("Аутентификация")
+    @Story("Авторизация пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.BLOCKER)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Успешная авторизация пользователя")
+    void postLoginSuccessfulTest() {
+
+        LoginModel loginData = new LoginModel(userEmail, userPassLogin);
+
+        LoginResponseModel response = step("Отправка POST запроса авторизации", () ->
+                given(baseRequestSpecification)
+                        .body(loginData)
+                .when()
+                        .post(userLogin)                   // POST /api/login
+                .then()
+                        .spec(baseResponseSpecification(200))
+                        .extract().as(LoginResponseModel.class));
+
+        step("Проверка успешной авторизации", () -> {
+            assertNotNull(response.getToken(),
+                    "Токен не должен быть null");
+            assertEquals("QpwL5tke4Pnpja7X4", response.getToken(),
+                    "Токен должен соответствовать ожидаемому значению");
+        });
+    }
+
+    @Feature("Взаимодействие с пользователями")
+    @Story("Обновление данных пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.NORMAL)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Полное обновление пользователя через PUT запрос")
+    void putUpdateUserTest() {
+
+        DataModel updateData =
+                new DataModel("Test Name", "1996", "Auto QA");
+
+        DataResponseModel response = step("Отправка PUT запроса для обновления", () ->
+                given(baseRequestSpecification)
+                        .body(updateData)
+                .when()
+                        .put(userPath + existingUserId)    // PUT /api/users/2
+                .then()
+                        .spec(baseResponseSpecification(200))
+                        .extract().as(DataResponseModel.class));
+
+        step("Проверка обновления данных", () -> {
+            assertEquals("Test Name", response.getName(),
+                    "Имя должно быть обновлено");
+            assertEquals("1996", response.getYear(),
+                    "Год должен быть обновлён");
+            assertEquals("Auto QA", response.getJob(),
+                    "Должность должна быть обновлена");
+            assertNotNull(response.getUpdatedAt(),
+                    "Дата обновления должна быть заполнена");
+        });
+    }
+
+    @Feature("Взаимодействие с пользователями")
+    @Story("Частичное обновление пользователя")
+    @Owner("trubnikov")
+    @Severity(SeverityLevel.NORMAL)
+    @Test
+    @Tag("rest_api")
+    @DisplayName("Частичное обновление пользователя через PATCH запрос")
+    void patchUpdateUserTest() {
+
+        // Отправляем только изменяемые поля
+        DataModel patchData = new DataModel("", "1990", "");
+
+        DataResponseModel response = step("Отправка PATCH запроса", () ->
+                given(baseRequestSpecification)
+                        .body(patchData)
+                .when()
+                        .patch(userPath + existingUserId)  // PATCH /api/users/2
+                .then()
+                        .spec(baseResponseSpecification(200))
+                        .extract().as(DataResponseModel.class));
+
+        step("Проверка частичного обновления", () -> {
+            assertEquals("1990", response.getYear(),
+                    "Год должен быть обновлён");
+            assertNotNull(response.getUpdatedAt(),
+                    "Дата обновления должна быть заполнена");
+        });
+    }
+}
+
