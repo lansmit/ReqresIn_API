@@ -12,21 +12,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static specs.RestApiSpec.baseRequestSpecification;
 import static specs.RestApiSpec.baseResponseSpecification;
 
+@Owner("trubnikov")
+@Tag("rest_api")
 public class ReqresAPITests extends TestBase {
 
-    @Feature("Взаимодействие с пользователями") // Группировка тестов по функциональности
-    @Story("Получение данных пользователя") // Детализация внутри Feature
-    @Owner("trubnikov")
+    @Feature("Взаимодействие с пользователями")
+    @Story("Получение данных пользователя")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    @Tag("rest_api")                                 // Тег для группового запуска
     @DisplayName("Получение данных зарегистрированного пользователя")
     void getSingleRegisteredUserDataTest() {
 
         GetSingleUserResponseModel response = step("Отправка GET запроса для пользователя", () ->
                 given(baseRequestSpecification)
                 .when()
-                        .get(userPath + existingUserId)    // GET /api/users/2
+                        .get(userPath + existingUserId)
                 .then()
                         .spec(baseResponseSpecification(200))
                         .extract().as(GetSingleUserResponseModel.class));
@@ -45,21 +45,19 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Взаимодействие с пользователями")
     @Story("Создание нового пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.CRITICAL)
     @Test
-    @Tag("rest_api")
     @DisplayName("Создание нового пользователя через POST запрос")
     void postCreateNewUserTest() {
 
-        // Подготовка тестовых данных
+
         CreateUserModel newUserData = new CreateUserModel("John Doe", "QA Engineer", "2024");
 
         CreateUserResponseModel response = step("Отправка POST запроса для создания пользователя", () ->
                 given(baseRequestSpecification)
                         .body(newUserData)
                 .when()
-                        .post(userPath)                    // POST /api/users
+                        .post(userPath)
                 .then()
                         .spec(baseResponseSpecification(201))
                         .extract().as(CreateUserResponseModel.class));
@@ -80,19 +78,17 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Взаимодействие с пользователями")
     @Story("Удаление пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    @Tag("rest_api")
     @DisplayName("Удаление пользователя через DELETE запрос")
     void deleteUserTest() {
 
         String response = step("Отправка DELETE запроса", () ->
                 given(baseRequestSpecification)
                 .when()
-                        .delete(userPath + newUserId)      // DELETE /api/users/713
+                        .delete(userPath + newUserId)
                 .then()
-                        .spec(baseResponseSpecification(204))  // 204 No Content
+                        .spec(baseResponseSpecification(204))
                         .extract().asString());
 
         step("Проверка успешного удаления", () -> {
@@ -103,10 +99,8 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Аутентификация")
     @Story("Регистрация пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    @Tag("rest_api")
     @DisplayName("Успешная регистрация пользователя")
     void postRegisterSuccessfulTest() {
 
@@ -117,7 +111,7 @@ public class ReqresAPITests extends TestBase {
                 given(baseRequestSpecification)
                         .body(registerData)
                 .when()
-                        .post(userRegister)                // POST /api/register
+                        .post(userRegister)
                 .then()
                         .spec(baseResponseSpecification(200))
                         .extract().as(PostRegisterSuccessfulResponseModel.class));
@@ -136,10 +130,8 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Аутентификация")
     @Story("Авторизация пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    @Tag("rest_api")
     @DisplayName("Успешная авторизация пользователя")
     void postLoginSuccessfulTest() {
 
@@ -149,7 +141,7 @@ public class ReqresAPITests extends TestBase {
                 given(baseRequestSpecification)
                         .body(loginData)
                 .when()
-                        .post(userLogin)                   // POST /api/login
+                        .post(userLogin)
                 .then()
                         .spec(baseResponseSpecification(200))
                         .extract().as(LoginResponseModel.class));
@@ -164,10 +156,8 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Взаимодействие с пользователями")
     @Story("Обновление данных пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.NORMAL)
     @Test
-    @Tag("rest_api")
     @DisplayName("Полное обновление пользователя через PUT запрос")
     void putUpdateUserTest() {
 
@@ -178,7 +168,7 @@ public class ReqresAPITests extends TestBase {
                 given(baseRequestSpecification)
                         .body(updateData)
                 .when()
-                        .put(userPath + existingUserId)    // PUT /api/users/2
+                        .put(userPath + existingUserId)
                 .then()
                         .spec(baseResponseSpecification(200))
                         .extract().as(DataResponseModel.class));
@@ -197,21 +187,19 @@ public class ReqresAPITests extends TestBase {
 
     @Feature("Взаимодействие с пользователями")
     @Story("Частичное обновление пользователя")
-    @Owner("trubnikov")
     @Severity(SeverityLevel.NORMAL)
     @Test
-    @Tag("rest_api")
     @DisplayName("Частичное обновление пользователя через PATCH запрос")
     void patchUpdateUserTest() {
 
-        // Отправляем только изменяемые поля
+
         DataModel patchData = new DataModel("", "1990", "");
 
         DataResponseModel response = step("Отправка PATCH запроса", () ->
                 given(baseRequestSpecification)
                         .body(patchData)
                 .when()
-                        .patch(userPath + existingUserId)  // PATCH /api/users/2
+                        .patch(userPath + existingUserId)
                 .then()
                         .spec(baseResponseSpecification(200))
                         .extract().as(DataResponseModel.class));
