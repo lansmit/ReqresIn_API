@@ -121,6 +121,10 @@ public class ReqresAPITests extends TestBase {
                     "ID пользователя должен быть возвращён");
             assertNotNull(response.getToken(),
                     "Токен должен быть возвращён");
+            assertTrue(response.getToken().length() >= 10,
+                    "Токен должен иметь минимальную длину 10 символов");
+            assertTrue(response.getToken().matches("^[a-zA-Z0-9]+$"),
+                    "Токен должен содержать только буквы и цифры");
             assertEquals("4", response.getId(),
                     "ID должен соответствовать ожидаемому");
             assertEquals("QpwL5tke4Pnpja7X4", response.getToken(),
@@ -149,6 +153,10 @@ public class ReqresAPITests extends TestBase {
         step("Проверка успешной авторизации", () -> {
             assertNotNull(response.getToken(),
                     "Токен не должен быть null");
+            assertTrue(response.getToken().length() >= 10,
+                    "Токен должен иметь минимальную длину 10 символов");
+            assertTrue(response.getToken().matches("^[a-zA-Z0-9]+$"),
+                    "Токен должен содержать только буквы и цифры");
             assertEquals("QpwL5tke4Pnpja7X4", response.getToken(),
                     "Токен должен соответствовать ожидаемому значению");
         });

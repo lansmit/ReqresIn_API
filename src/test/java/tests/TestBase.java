@@ -17,5 +17,6 @@ public class TestBase extends TestData {
 
 
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.log().all();
     }
 }
