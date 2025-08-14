@@ -1,6 +1,7 @@
 package specs;
 
 import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -9,7 +10,6 @@ import tests.TestBase;
 import static io.restassured.RestAssured.with;
 
 import static helpers.CustomAllureListener.withCustomTemplates;
-import static io.restassured.filter.log.LogDetail.ALL;
 
 public class RestApiSpec extends TestBase {
 

@@ -14,9 +14,5 @@ public class TestBase extends TestData {
     static void setUp() {
         RestAssured.baseURI = config.baseApiUri();
         RestAssured.basePath = config.basePath();
-
-
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.log().all();
     }
 }
