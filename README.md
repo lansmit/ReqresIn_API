@@ -5,11 +5,18 @@
 ## Содержание:
 
 - [Технологии и инструменты](#технологии-и-инструменты)
-- [Примеры автоматизированных тест-кейсов](#тестовые-сценарии)
+- [Тестовые сценарии](#тестовые-сценарии)
 - [Сборка в Jenkins](#jenkins-build)
 - [Запуск из терминала](#команды-для-запуска-из-терминала)
 - [Allure отчет](#allure-report)
 - [Уведомление в Telegram при помощи бота](#уведомление-в-telegram-при-помощи-бота)
+
+- Тесты реализованы на <code>Java</code> с использованием фреймворка <code>Selenide</code>.
+- В качестве сборщика используется <code>Gradle</code>.
+- Для модульного тестирования применён фреймворк <code>JUnit 5</code>.
+- Для работы с API используется <code>Rest Assured</code>.
+
+---
 
 ### Технологии и инструменты:
 <table>
@@ -34,16 +41,8 @@
 - Тест №6: Обновление данных пользователя - PUT
 - Тест №7: Обновление данных пользователя - PATCH
 ---
-- Тесты реализованы на <code>Java</code> с использованием фреймворка <code>Selenide</code>.
-- В качестве сборщика используется <code>Gradle</code>.
-- Для модульного тестирования применён фреймворк <code>JUnit 5</code>.
-- Для работы с API используется <code>Rest Assured</code>.
----
-
 <h3 id="jenkins-build"> 
-  <img src="https://img.icons8.com/?size=30&id=39292&format=png&color=000000"> Сборка в <a href="<h3 id="jenkins-build"> 
   <img src="https://img.icons8.com/?size=30&id=39292&format=png&color=000000"> Сборка в <a href="https://jenkins.autotests.cloud/job/C35-lansm_t-build_for_reqres/">Jenkins</a>
-</h3>">Jenkins</a>
 </h3>
 
 **Параметры сборки в Jenkins:**
