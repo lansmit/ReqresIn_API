@@ -1,6 +1,6 @@
 # Проект по автоматизации API-тестов для проекта [Reqres.In](https://reqres.in)
 
-![](src/media/REQRES.jpg)
+![](media/REQRES.jpg)
 
 ## 🔨 Технологии и инструменты:
 <table>
@@ -39,7 +39,7 @@
 - **selenoidLogin** (логин удаленного сервера Selenoid)
 - **selenoidPassword** (пароль удаленного сервера Selenoid)
 
-![](src/media/jenkins_reqres.jpg)
+![](media/jenkins_reqres.jpg)
 
 ---
 ## :rocket: Команды для запуска
@@ -55,8 +55,8 @@ gradle clean test
 
 ***Тест-кейсы***
 
-![](src/media/allure_reqres.jpg)
+![](media/allure_reqres.jpg)
 
 ---
 ### Уведомление в Telegram при помощи бота
-![](src/media/telegram_reqres.jpg)
+![](media/telegram_reqres.jpg)
