@@ -28,6 +28,18 @@
 - Для модульного тестирования применён фреймворк <code>JUnit 5</code>.
 - Для работы с API используется <code>Rest Assured</code>.
 ---
+
+**Параметры сборки в Jenkins:**
+
+- **browser** (браузер для ui-части тестов, по умолчанию chrome)
+- **browserVersion** (версия браузера, по умолчанию 128.0)
+- **browserSize** (размер окна браузера, по умолчанию 1920x1080)
+- **selenoidLogin** (логин удаленного сервера Selenoid)
+- **selenoidPassword** (пароль удаленного сервера Selenoid)
+
+![](src/media/jenkins_reqres.jpg)
+
+---
 ## :rocket: Команды для запуска
 
 ```bash
@@ -38,3 +50,11 @@ gradle clean test
 ./gradlew.bat clean test
 ```
 ---
+
+***Тест-кейсы***
+
+![](src/media/allure_reqres.jpg)
+
+---
+### Уведомление в Telegram при помощи бота
+![](src/media/telegram_reqres.jpg)
